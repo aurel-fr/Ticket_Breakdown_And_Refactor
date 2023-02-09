@@ -42,7 +42,7 @@ describe("deterministicPartitionKey", () => {
       expect(hash).toMatch(/^(0x|0h)?[0-9A-F]+$/i);
     }
   });
-  it("Returns a deterministic hash when the partition key is an empty string", () => {
+  it("Returns a deterministic hash for a given input", () => {
     const key = "";
     // sha3-512 hash of "{"partitionKey":""}"
     const expectedHash =
@@ -57,10 +57,12 @@ describe("deterministicPartitionKey", () => {
     const resultingKey = deterministicPartitionKey({ partitionKey: key });
     expect(resultingKey).toBe(key);
   });
-  it("Returns a stringified partition key when it is not a string but its string representation is less than 257 chars", () => {
-    const key = { badKey: 998 };
-    const resultingKey = deterministicPartitionKey({ partitionKey: key });
-    expect(resultingKey).toBe(JSON.stringify(key));
+  it("Returns a stringified partition key when it is not a string but truthy and its string representation is less than 257 chars", () => {
+    const truthy = [{ badKey: 998 }, true, 1, []];
+    for (const t of truthy) {
+      const resultingKey = deterministicPartitionKey({ partitionKey: t });
+      expect(resultingKey).toBe(JSON.stringify(t));
+    }
   });
   it("Returns the sha3-512 hash of a partition key when it is a string over 256 chars", () => {
     const key = "1".repeat(257);
