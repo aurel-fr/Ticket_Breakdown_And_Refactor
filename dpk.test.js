@@ -8,7 +8,7 @@ describe("deterministicPartitionKey", () => {
   it("Returns the literal '0' when given a falsy input", () => {
     const falsy = [0, false, null, undefined, ""];
     for (const f of falsy){
-      const trivialKey = deterministicPartitionKey(false);
+      const trivialKey = deterministicPartitionKey(f);
       expect(trivialKey).toBe("0");
     }
   });
