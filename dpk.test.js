@@ -6,19 +6,11 @@ describe("deterministicPartitionKey", () => {
     expect(trivialKey).toBe("0");
   });
   it("Returns the literal '0' when given a falsy input", () => {
-    const falsy = [0, false, null, undefined, ""];
-    for (const f of falsy){
+    const falsy = [0, false, null, undefined, "", NaN];
+    for (const f of falsy) {
       const trivialKey = deterministicPartitionKey(f);
       expect(trivialKey).toBe("0");
     }
-  });
-  it("Returns a deterministic hash when the partition key is an empty string", () => {
-    const key = "";
-    // sha3-512 hash of "{"partitionKey":""}"
-    const expectedHash =
-      "b7478342a465088fc33d43a64cd370737e5a3bf6749ca62c1d6db341beb987326b4df3a9f54f67a2f0ee915d4216af2f382fda14dd58dc67794f745e92d7a7f6";
-    const hash = deterministicPartitionKey({ partitionKey: key });
-    expect(hash).toBe(expectedHash);
   });
   it("Returns a sha3-512 hash when given a string input that is not flagged as a partition key", () => {
     const key = "donald_duck";
@@ -38,6 +30,24 @@ describe("deterministicPartitionKey", () => {
     const expectedHash =
       "dd54f7808ee0bd4a39f1d71913a2b86fbb4eafb34cb9a9764dda8cfbc9eb5001f19327cbd6eba21bf4873737c89bf4ece24a301dc27cdfbc0bd304c75f55be55";
     const hash = deterministicPartitionKey(key);
+    expect(hash).toBe(expectedHash);
+    expect(hash).toHaveLength(128);
+    expect(hash).toMatch(/^(0x|0h)?[0-9A-F]+$/i);
+  });
+  it("Returns a hash when the partition key is falsy", () => {
+    const falsy = [0, false, null, undefined, "", NaN];
+    for (const f of falsy) {
+      const hash = deterministicPartitionKey({ partitionKey: f });
+      expect(hash).toHaveLength(128);
+      expect(hash).toMatch(/^(0x|0h)?[0-9A-F]+$/i);
+    }
+  });
+  it("Returns a deterministic hash when the partition key is an empty string", () => {
+    const key = "";
+    // sha3-512 hash of "{"partitionKey":""}"
+    const expectedHash =
+      "b7478342a465088fc33d43a64cd370737e5a3bf6749ca62c1d6db341beb987326b4df3a9f54f67a2f0ee915d4216af2f382fda14dd58dc67794f745e92d7a7f6";
+    const hash = deterministicPartitionKey({ partitionKey: key });
     expect(hash).toBe(expectedHash);
     expect(hash).toHaveLength(128);
     expect(hash).toMatch(/^(0x|0h)?[0-9A-F]+$/i);
