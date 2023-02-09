@@ -4,9 +4,9 @@ exports.deterministicPartitionKey = (event) => {
   const TRIVIAL_PARTITION_KEY = "0";
   const MAX_PARTITION_KEY_LENGTH = 256;
   let { partitionKey } = event ?? {};
-  // no event -> return trivial partition key
+  // no input -> return trivial partition key
   if (event == undefined) return TRIVIAL_PARTITION_KEY;
-  // check if out event includes a partition key
+  // check if the event includes a partition key
   if (partitionKey) {
     // if the partition key is not a string stringify it
     if (typeof partitionKey != "string") partitionKey = JSON.stringify(partitionKey);

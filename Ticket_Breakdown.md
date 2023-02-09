@@ -31,7 +31,7 @@ To allow our client Facilities to assign a customizable ID for the agents they a
 #### Details:
 
 - With the assumption we are currently working with SQL tables, the new table could have the first column be the Facilities ID, the second column be the Agents ID and the third column a `custom_id`.
-- Proper indexing on the `Facilities` column is needed to ensure fast retrieval of all the `custom_id` associated with a given facility.
+- Proper indexing on the `Facilities` column is needed to ensure fast retrieval of all the `custom_id` associated with a given Facility.
 - Uniqueness must also be guaranteed: there should only be one row for each Facilities - Agents pair.
 
 #### Estimate:
@@ -41,7 +41,7 @@ To allow our client Facilities to assign a customizable ID for the agents they a
 #### Acceptance criteria:
 
 - A new table is created, allowing to save a `custom_id` for each Facilities - Agents pairs.
-- An index on the `Facilities` column exists.
+- An index on the `Facilities` column has been created.
 
 ### Ticket 2 - Make API endpoints to support setting and updating agents' customizable ID
 
@@ -55,8 +55,8 @@ Our client Facilities must be able to save and update a custom ID for each agent
 
 - Assumption: we are dealing with a REST API. A POST and PATCH endpoint should allow client Facilities to save and update information about agents they are working with. Although we only need to record a `custom_id`, it is preferred to create a generic endpoint and future-proof this route should clients wish in the future to save additional information about the agents they are working with (comments, ratings etc...)
 - Care should be put into sanitizing the user input (eg: allow alpha-numerical characters only, allow a maximum of a 100 characters per ID).
-- Before saving the `custom_id`, verification should be made that the `agent_id` and `Facilities_id` provided in the request matches with an existing agent and facility in our database.
-- We should ensure that the `Facilities_id` match the credentials of the authenticated user: Facility Alice should not be able to record a `custom_id` for Facility Bob!
+- Before saving the `custom_id`, verification should be made that the `agent_id` and `facilities_id` provided in the request matches with an existing agent and facility in our database.
+- We should ensure that the `facilities_id` match the credentials of the authenticated user: Facility Alice should not be able to record a `custom_id` for Facility Bob!
 
 #### Estimate:
 
@@ -83,7 +83,7 @@ When our client Facilities visualize all the shifts that have been worked that q
 
 #### Details:
 
- - The database query triggered by `getShiftsByFacility` should include our new `Agents_Facilities` table and replace the ID from the `Agents` table with the `custom_id` matching that Agent and Facility in the `Agents_Facilities` table if it is not null.
+- The database query triggered by `getShiftsByFacility` should include our new `Agents_Facilities` table and replace the ID from the `Agents` table with the `custom_id` matching that Agent and Facility in the `Agents_Facilities` table if it is not null.
 
 #### Estimate:
 
