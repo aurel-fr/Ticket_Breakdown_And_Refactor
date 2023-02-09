@@ -5,6 +5,13 @@ describe("deterministicPartitionKey", () => {
     const trivialKey = deterministicPartitionKey();
     expect(trivialKey).toBe("0");
   });
+  it("Returns the literal '0' when given a falsy input", () => {
+    const falsy = [0, false, null, undefined, ""];
+    for (const f of falsy){
+      const trivialKey = deterministicPartitionKey(false);
+      expect(trivialKey).toBe("0");
+    }
+  });
   it("Returns a deterministic hash when the partition key is an empty string", () => {
     const key = "";
     // sha3-512 hash of "{"partitionKey":""}"

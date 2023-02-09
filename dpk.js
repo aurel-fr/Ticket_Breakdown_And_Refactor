@@ -3,9 +3,11 @@ const crypto = require("crypto");
 exports.deterministicPartitionKey = (event) => {
   const TRIVIAL_PARTITION_KEY = "0";
   const MAX_PARTITION_KEY_LENGTH = 256;
-  let { partitionKey } = event ?? {};
+  
   // no input -> return trivial partition key
-  if (event == undefined) return TRIVIAL_PARTITION_KEY;
+  if (!event) return TRIVIAL_PARTITION_KEY;
+
+  let { partitionKey } = event
   // check if the event includes a partition key
   if (partitionKey) {
     // if the partition key is not a string stringify it
@@ -14,7 +16,7 @@ exports.deterministicPartitionKey = (event) => {
     if (partitionKey.length <= MAX_PARTITION_KEY_LENGTH) return partitionKey;
   } else {
     // if no partition key is provided stringify the input
-    partitionKey = JSON.stringify(event); 
+    partitionKey = JSON.stringify(event);
   }
-  return crypto.createHash("sha3-512").update(partitionKey).digest("hex"); 
+  return crypto.createHash("sha3-512").update(partitionKey).digest("hex");
 };
