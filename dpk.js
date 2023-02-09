@@ -3,8 +3,8 @@ const crypto = require("crypto");
 exports.deterministicPartitionKey = (event) => {
   const TRIVIAL_PARTITION_KEY = "0";
   const MAX_PARTITION_KEY_LENGTH = 256;
-  
-  // no input -> return trivial partition key
+
+  // falsy input -> return trivial partition key
   if (!event) return TRIVIAL_PARTITION_KEY;
 
   let { partitionKey } = event
